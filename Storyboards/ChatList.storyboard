@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="17506" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_1" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17505"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Navigation Controller-->
+        <scene sceneID="VRl-39-SSA">
+            <objects>
+                <navigationController id="WXs-Hc-kLQ" sceneMemberID="viewController">
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" id="60i-yb-Src">
+                        <rect key="frame" x="0.0" y="44" width="414" height="44"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="pph-wf-XLy" kind="relationship" relationship="rootViewController" id="jrQ-Zk-6aE"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Tpu-Ks-l5G" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-1116" y="130"/>
+        </scene>
+        <!--Chat List View Controller-->
+        <scene sceneID="Qp3-ms-lnI">
+            <objects>
+                <viewController storyboardIdentifier="ChatListViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="pph-wf-XLy" customClass="ChatListViewController" customModule="ChatApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="YpX-lZ-W1e">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="jC5-Hf-fNn">
+                                <rect key="frame" x="0.0" y="93" width="414" height="774"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cellId" rowHeight="80" id="YSC-9j-xkw" customClass="ChatListTableViewCell" customModule="ChatApp" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="414" height="80"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="YSC-9j-xkw" id="qs1-3H-qoi">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="80"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="pcf-q5-pzy">
+                                                    <rect key="frame" x="10" y="5" width="70" height="70"/>
+                                                    <color key="backgroundColor" systemColor="systemPinkColor"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="70" id="Q9b-XL-bhw"/>
+                                                        <constraint firstAttribute="width" secondItem="pcf-q5-pzy" secondAttribute="height" multiplier="1:1" id="ne0-cG-Zl7"/>
+                                                    </constraints>
+                                                </imageView>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="最後のメッセージ" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="LFB-2t-B3r">
+                                                    <rect key="frame" x="90" y="21" width="122.5" height="18"/>
+                                                    <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="15"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="やすくん" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="mYh-d2-roS">
+                                                    <rect key="frame" x="90" y="46" width="57.5" height="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="22:00" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QM6-CO-egO">
+                                                    <rect key="frame" x="346" y="21" width="38" height="17"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                                    <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="pcf-q5-pzy" firstAttribute="centerY" secondItem="qs1-3H-qoi" secondAttribute="centerY" id="3Hq-Wc-FGo"/>
+                                                <constraint firstItem="mYh-d2-roS" firstAttribute="top" secondItem="LFB-2t-B3r" secondAttribute="bottom" constant="7" id="7y8-Gb-hN5"/>
+                                                <constraint firstItem="pcf-q5-pzy" firstAttribute="leading" secondItem="qs1-3H-qoi" secondAttribute="leading" constant="10" id="Ocl-21-dFd"/>
+                                                <constraint firstItem="LFB-2t-B3r" firstAttribute="top" secondItem="qs1-3H-qoi" secondAttribute="topMargin" constant="10" id="dGM-dc-y9f"/>
+                                                <constraint firstItem="QM6-CO-egO" firstAttribute="top" secondItem="qs1-3H-qoi" secondAttribute="topMargin" constant="10" id="qsH-Mu-N3m"/>
+                                                <constraint firstItem="mYh-d2-roS" firstAttribute="leading" secondItem="pcf-q5-pzy" secondAttribute="trailing" constant="10" id="rAh-vQ-Fq1"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="QM6-CO-egO" secondAttribute="trailing" constant="10" id="uDi-DG-9PI"/>
+                                                <constraint firstItem="LFB-2t-B3r" firstAttribute="leading" secondItem="pcf-q5-pzy" secondAttribute="trailing" constant="10" id="uNa-Ho-q77"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="dateLabel" destination="QM6-CO-egO" id="KP9-OQ-05T"/>
+                                            <outlet property="latestMessageLabel" destination="LFB-2t-B3r" id="GV5-6t-ryE"/>
+                                            <outlet property="partnerLabel" destination="mYh-d2-roS" id="Gne-un-MTf"/>
+                                            <outlet property="userImageView" destination="pcf-q5-pzy" id="DBb-Db-rf3"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                            </tableView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="r1F-ps-ifC"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="jC5-Hf-fNn" firstAttribute="leading" secondItem="r1F-ps-ifC" secondAttribute="leading" id="0RU-6d-6gN"/>
+                            <constraint firstItem="jC5-Hf-fNn" firstAttribute="top" secondItem="r1F-ps-ifC" secondAttribute="top" id="Iof-cP-VLD"/>
+                            <constraint firstItem="r1F-ps-ifC" firstAttribute="bottom" secondItem="jC5-Hf-fNn" secondAttribute="bottom" id="Opp-gA-OkM"/>
+                            <constraint firstItem="r1F-ps-ifC" firstAttribute="trailing" secondItem="jC5-Hf-fNn" secondAttribute="trailing" id="T9t-tG-VJH"/>
+                        </constraints>
+                    </view>
+                    <navigationItem key="navigationItem" id="COh-Vk-dBN"/>
+                    <connections>
+                        <outlet property="chatListTableView" destination="jC5-Hf-fNn" id="N4M-JH-uCt"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="8zu-lv-vIT" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-310.14492753623193" y="181.47321428571428"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemPinkColor">
+            <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+    </resources>
+</document>
