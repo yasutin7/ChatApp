@@ -34,8 +34,6 @@ class ChatListViewController: UIViewController {
     private func fetchChatRoomsInfoFromFirestore() {
         Firestore.firestore().collection("chatRooms")
             .addSnapshotListener { (snapshots, err) in
-                
-                //            .getDocuments{(snapshots, err) in
                 if let err = err {
                     print("Firestoreからルーム情報の取得に失敗しました。", err)
                     return
@@ -57,8 +55,13 @@ class ChatListViewController: UIViewController {
     private func handleAddedDocumentChange(documentChange: DocumentChange) {
         let dic = documentChange.document.data()
         let chatRoom = ChatRoom.init(dic: dic)
+        chatRoom.documentId = documentChange.document.documentID
         
         guard let uid = Auth.auth().currentUser?.uid else {return}
+        let isContain = chatRoom.members.contains(uid)
+        
+        if !isContain {return}
+        
         chatRoom.members.forEach{(memberUid) in
             if memberUid != uid {
                 Firestore.firestore().collection("users").document(memberUid).getDocument { (snapshot, err) in
@@ -149,7 +152,9 @@ extension ChatListViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         let storyboard = UIStoryboard.init(name: "ChatRoom", bundle: nil)
-        let chatRoomViewController = storyboard.instantiateViewController(identifier: "ChatRoomViewController")
+        let chatRoomViewController = storyboard.instantiateViewController(identifier: "ChatRoomViewController") as! ChatRoomViewController
+        chatRoomViewController.user = user
+        chatRoomViewController.chatroom = chatRooms[indexPath.row]
         navigationController?.pushViewController(chatRoomViewController, animated: true)
     }
     
@@ -157,18 +162,6 @@ extension ChatListViewController: UITableViewDelegate, UITableViewDataSource {
 
 
 class ChatListTableViewCell: UITableViewCell {
-    
-    //    var user: User? {
-    //        didSet {
-    //            if let user = user {
-    //                partnerLabel.text = user.username
-    //                //            userImageView.image = user?.profile_image
-    //                dateLabel.text = dateFomatterForDateLabel(date: user.createdAt.dateValue())
-    //                latestMessageLabel.text = user.email
-    //            }
-    //        }
-    //
-    //    }
     
     var chatroom: ChatRoom? {
         didSet {
