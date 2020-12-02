@@ -6,10 +6,20 @@
 //
 
 import UIKit
+protocol ChatInputAccessoryViewDelegate: class{
+    func tappedSendButton(text: String)
+}
+
+
 class ChatInputAccessoryView: UIView {
     
+    weak var delegate: ChatInputAccessoryViewDelegate?
     @IBOutlet weak var chatTextView: UITextView!
     @IBOutlet weak var sendButton: UIButton!
+    
+    @IBAction func tappedSendButton(_ sender: Any) {
+        delegate?.tappedSendButton(text: chatTextView.text)
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -29,6 +39,11 @@ class ChatInputAccessoryView: UIView {
         
         chatTextView.text = ""
         chatTextView.delegate = self
+    }
+    
+    func removeText() {
+        chatTextView.text = ""
+        sendButton.isEnabled = false
     }
     
     override var intrinsicContentSize: CGSize {
