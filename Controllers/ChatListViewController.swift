@@ -14,6 +14,7 @@ import Nuke
 class ChatListViewController: UIViewController {
     
     private let cellId = "cellId"
+    private var chatRoomListener: ListenerRegistration?
     private var user: User? {
         didSet {
             navigationItem.title = user?.username
@@ -27,12 +28,20 @@ class ChatListViewController: UIViewController {
         super.viewDidLoad()
         setUpViews()
         confirmLoggedInUser()
-        fetchLoginUserInfo()
         fetchChatRoomsInfoFromFirestore()
     }
     
-    private func fetchChatRoomsInfoFromFirestore() {
-        Firestore.firestore().collection("chatRooms")
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        fetchLoginUserInfo()
+    }
+    
+    func fetchChatRoomsInfoFromFirestore() {
+        chatRoomListener?.remove()
+        chatRooms.removeAll()
+        chatListTableView.reloadData()
+        
+        chatRoomListener = Firestore.firestore().collection("chatRooms")
             .addSnapshotListener { (snapshots, err) in
                 if let err = err {
                     print("Firestoreからルーム情報の取得に失敗しました。", err)
@@ -111,12 +120,14 @@ class ChatListViewController: UIViewController {
         navigationController?.navigationBar.tintColor = .white
         let textAttributes = [NSAttributedString.Key.foregroundColor:UIColor.white]
         navigationController?.navigationBar.titleTextAttributes = textAttributes
-        
-        let rightBarButton = UIBarButtonItem(title: "チャット", style: .plain, target: self, action: #selector(tapperNavRightBarButton))
+      
+        let rightBarButton = UIBarButtonItem(title: "チャット", style: .plain, target: self, action: #selector(tappedNavRightBarButton))
+        let logoutBarButton = UIBarButtonItem(title: "ログアウト", style: .plain, target: self, action: #selector(tappedLogoutButton))
         navigationItem.rightBarButtonItem = rightBarButton
+        navigationItem.leftBarButtonItem = logoutBarButton
     }
     
-    @objc private func tapperNavRightBarButton() {
+    @objc private func tappedNavRightBarButton() {
         let storyboard = UIStoryboard.init(name: "UserList", bundle: nil)
         let userListController = storyboard.instantiateViewController(withIdentifier: "UserListController")
         let nav = UINavigationController(rootViewController: userListController)
@@ -124,13 +135,27 @@ class ChatListViewController: UIViewController {
     }
     
     
+    @objc private func tappedLogoutButton() {
+        do {
+            try  Auth.auth().signOut()
+                 pushLoginViewController()
+        } catch  {
+            print("ログアウトに失敗しました。", error)
+        }
+    }
+    
     private func confirmLoggedInUser() {
         if Auth.auth().currentUser?.uid == nil {
-            let storyboard = UIStoryboard.init(name: "SignUp", bundle: nil)
-            let signUpViewController = storyboard.instantiateViewController(identifier: "SignUpViewController") as! SignUpViewController
-            signUpViewController.modalPresentationStyle = .fullScreen
-            self.present(signUpViewController, animated: true, completion: nil)
+            pushLoginViewController()
         }
+    }
+    
+    private func pushLoginViewController() {
+        let storyboard = UIStoryboard(name: "SignUp", bundle: nil)
+        let signUpViewController = storyboard.instantiateViewController(identifier: "SignUpViewController")
+        let nav = UINavigationController(rootViewController: signUpViewController)
+        nav.modalPresentationStyle = .fullScreen
+        self.present(nav, animated: true, completion: nil)
     }
     
     private func fetchLoginUserInfo() {

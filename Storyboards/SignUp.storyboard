@@ -125,8 +125,9 @@
                             <constraint firstItem="bRM-Mb-nn3" firstAttribute="top" secondItem="AnM-t4-UOw" secondAttribute="top" constant="40" id="lrq-Wl-Okw"/>
                         </constraints>
                     </view>
+                    <navigationItem key="navigationItem" id="9aT-G3-VBW"/>
                     <connections>
-                        <outlet property="alreadyHaveAccountButton" destination="rCj-pA-QoT" id="kvR-MS-RVN"/>
+                        <outlet property="alreadyHaveAccountButton" destination="125-Ys-wbZ" id="xmI-JO-NUs"/>
                         <outlet property="emailTextField" destination="3bY-F2-PCd" id="JbL-nR-aYr"/>
                         <outlet property="passwordTextField" destination="ex0-mc-dAI" id="GaY-uR-Zt6"/>
                         <outlet property="profileImageButton" destination="bRM-Mb-nn3" id="rhb-hJ-0Qr"/>

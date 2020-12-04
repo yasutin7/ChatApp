@@ -18,10 +18,24 @@ class SignUpViewController: UIViewController {
     @IBOutlet weak var passwordTextField: UITextField!
     @IBOutlet weak var userNameTextField: UITextField!
     @IBOutlet weak var registerButton: UIButton!
-    @IBOutlet var alreadyHaveAccountButton: UIView!
+    @IBOutlet weak var alreadyHaveAccountButton: UIButton!
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        setUpViews()
+        alreadyHaveAccountButton.addTarget(self, action: #selector(tappedAlreadyHaveAccountButton), for: .touchUpInside)
+        
+    }
+    
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+        
+        navigationController?.navigationBar.isHidden = true
+    }
+    
+    private func setUpViews() {
         profileImageButton.layer.cornerRadius = 85
         profileImageButton.layer.borderWidth = 1
         profileImageButton.layer.borderColor = UIColor.rgb(red: 240, green: 240, blue: 240).cgColor
@@ -33,7 +47,12 @@ class SignUpViewController: UIViewController {
         emailTextField.delegate = self
         passwordTextField.delegate = self
         userNameTextField.delegate = self
-        
+    }
+    
+    @objc private func tappedAlreadyHaveAccountButton() {
+        let storyboard = UIStoryboard(name: "Login", bundle: nil)
+        let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController")
+        self.navigationController?.pushViewController(loginViewController, animated: true)
     }
     
     @IBAction func tappedProfileImageButton(_ sender: Any) {
