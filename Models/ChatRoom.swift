@@ -11,11 +11,12 @@ import FirebaseFirestore
 
 class ChatRoom {
     
-    let latestMessageId: String
     let members: [String]
     let createdAt: Timestamp
     var documentId: String?
     var partnerUser: User?
+    let latestMessageId: String
+    var latestMessage: Message?
     
     init(dic:[String: Any]) {
         self.latestMessageId = dic["latestMessageId"] as? String ?? ""

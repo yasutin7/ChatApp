@@ -32,7 +32,10 @@ class ChatRoomViewController: UIViewController {
         chatRoomTableView.delegate = self
         chatRoomTableView.dataSource = self
         chatRoomTableView.register(UINib(nibName: "ChatRoomTableViewCell", bundle: nil), forCellReuseIdentifier: cellId)
-        fetchMessages() 
+        chatRoomTableView.contentInset = .init(top: 0, left: 0, bottom: 50, right: 0)
+        chatRoomTableView.scrollIndicatorInsets = .init(top: 0, left: 0, bottom: 50, right: 0)
+        fetchMessages()
+        
     }
     
     override var inputAccessoryView: UIView? {
@@ -60,7 +63,13 @@ class ChatRoomViewController: UIViewController {
                     let message = Message(dic: dic)
                     message.partnerUser = chatroom?.partnerUser
                     self.messsages.append(message)
-                    self.chatRoomTableView.reloadData()
+                    self.messsages.sort { (m1, m2) -> Bool in
+                        let m1Date = m1.createdAt.dateValue()
+                        let m2Date = m2.createdAt.dateValue()
+                        return m1Date < m2Date
+                    }
+                self.chatRoomTableView.reloadData()
+                    self.chatRoomTableView.scrollToRow(at: IndexPath(row: messsages.count-1, section: 0), at: .bottom, animated: true)
                 case .modified,.removed:
                     print("nothing to do")
                 }
@@ -72,10 +81,16 @@ class ChatRoomViewController: UIViewController {
 
 extension ChatRoomViewController: ChatInputAccessoryViewDelegate {
     func tappedSendButton(text: String) {
+        addMessageToFirestore(text: text)
+    }
+    
+    private func addMessageToFirestore(text: String) {
         guard let chatRoomDocId = chatroom?.documentId else {return}
         guard let name = user?.username else {return}
         guard let uid = Auth.auth().currentUser?.uid else {return}
         chatInputAccessoryView.removeText()
+        
+        let messageId = randomSetId(length: 20)
         
         let docData = [
             "name": name,
@@ -83,14 +98,39 @@ extension ChatRoomViewController: ChatInputAccessoryViewDelegate {
             "uid": uid,
             "message": text
         ] as [String : Any]
-        Firestore.firestore().collection("chatRooms").document(chatRoomDocId).collection("messages").document().setData(docData) {(err) in
+        Firestore.firestore().collection("chatRooms").document(chatRoomDocId).collection("messages").document(messageId).setData(docData) {(err) in
             if let err = err {
                 print("メッセージの保存に失敗しました。", err)
                 return
             }
             
-            print("メッセージの保存に成功しました")
+          
+            let latestMessageDate =  [
+                "latestMessageId": messageId
+            ]
+            Firestore.firestore().collection("chatRooms").document(chatRoomDocId).updateData(latestMessageDate) {(err) in
+                if let err = err {
+                    print("最新のメッセージの保存に失敗しました。", err)
+                    return
+                }
+                
+                print("メッセージの保存に成功しました")
+                
+            }
         }
+    }
+    
+    private func randomSetId(length: Int) -> String {
+        let letters : NSString =  "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+        let len = UInt32(letters.length)
+        
+        var randomSetId = ""
+        for _ in 0 ..< length {
+            let rand = arc4random_uniform(len)
+            var nextChar = letters.character(at: Int(rand))
+            randomSetId += NSString(characters: &nextChar, length: 1) as String
+        }
+        return randomSetId
     }
     
     
