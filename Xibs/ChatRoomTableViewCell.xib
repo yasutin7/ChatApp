@@ -24,7 +24,7 @@
                             <constraint firstAttribute="width" secondItem="OLI-eX-WTJ" secondAttribute="height" multiplier="105:109" id="o3P-0L-3dJ"/>
                         </constraints>
                     </imageView>
-                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="メッセージがここに入る" textAlignment="natural" selectable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="CdN-1C-cgp">
+                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="メッセージがここに入る" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="CdN-1C-cgp">
                         <rect key="frame" x="90" y="25" width="250" height="130"/>
                         <color key="backgroundColor" systemColor="systemGray5Color"/>
                         <constraints>
@@ -40,7 +40,7 @@
                         <color key="textColor" white="0.33333333329999998" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <nil key="highlightedColor"/>
                     </label>
-                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" text="自分のメッセージ" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="QY3-mi-ii5">
+                    <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" scrollEnabled="NO" editable="NO" text="自分のメッセージ" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="QY3-mi-ii5">
                         <rect key="frame" x="272" y="25" width="250" height="130"/>
                         <color key="backgroundColor" systemColor="systemGreenColor"/>
                         <color key="tintColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>

@@ -16,8 +16,11 @@ class ChatRoomViewController: UIViewController {
     let cellId = "cellId"
     
     var messsages = [Message]()
+    private let accessoryHeight: CGFloat = 100
+    private let tableViewContentInset: UIEdgeInsets = .init(top: 0, left: 0, bottom: 50, right: 0)
+    private let tableViewIndicatorInset: UIEdgeInsets = .init(top: 0, left: 0, bottom: 50, right: 0)
     private lazy var chatInputAccessoryView: ChatInputAccessoryView = {
-     
+        
         let view = ChatInputAccessoryView()
         view.frame = .init(x: 0, y: 0, width: view.frame.width, height: 100)
         view.delegate = self
@@ -29,14 +32,44 @@ class ChatRoomViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        chatRoomTableView.delegate = self
-        chatRoomTableView.dataSource = self
-        chatRoomTableView.register(UINib(nibName: "ChatRoomTableViewCell", bundle: nil), forCellReuseIdentifier: cellId)
-        chatRoomTableView.contentInset = .init(top: 0, left: 0, bottom: 50, right: 0)
-        chatRoomTableView.scrollIndicatorInsets = .init(top: 0, left: 0, bottom: 50, right: 0)
+        setUpNotification()
+        setUpChatRoom()
         fetchMessages()
         
     }
+    
+    private func setUpNotification() {
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillShow), name: UIResponder.keyboardWillShowNotification, object: nil)
+        NotificationCenter.default.addObserver(self, selector: #selector(keyboardWillHide), name: UIResponder.keyboardWillHideNotification, object: nil)
+    }
+    
+    private func setUpChatRoom() {
+        chatRoomTableView.delegate = self
+        chatRoomTableView.dataSource = self
+        chatRoomTableView.register(UINib(nibName: "ChatRoomTableViewCell", bundle: nil), forCellReuseIdentifier: cellId)
+        chatRoomTableView.contentInset = tableViewContentInset
+        chatRoomTableView.scrollIndicatorInsets = tableViewIndicatorInset
+        chatRoomTableView.keyboardDismissMode = .interactive
+    }
+    
+    @objc func keyboardWillShow(notification: NSNotification) {
+        guard let userInfo = notification.userInfo else {return}
+        if let keyboardFrame = (userInfo[UIResponder.keyboardFrameEndUserInfoKey] as AnyObject).cgRectValue {
+            
+            if keyboardFrame.height <= accessoryHeight {return}
+            let top = keyboardFrame.height
+            let contentInset = UIEdgeInsets(top: top, left: 0, bottom: 0, right: 0)
+            chatRoomTableView.contentInset = contentInset
+            chatRoomTableView.scrollIndicatorInsets = contentInset
+            chatRoomTableView.contentOffset = CGPoint(x: 0, y: top + 100)
+        }
+    }
+    
+    @objc func keyboardWillHide() {
+        chatRoomTableView.contentInset = tableViewContentInset
+        chatRoomTableView.scrollIndicatorInsets = tableViewIndicatorInset
+    }
+    
     
     override var inputAccessoryView: UIView? {
         get {
@@ -68,8 +101,8 @@ class ChatRoomViewController: UIViewController {
                         let m2Date = m2.createdAt.dateValue()
                         return m1Date < m2Date
                     }
-                self.chatRoomTableView.reloadData()
-                    self.chatRoomTableView.scrollToRow(at: IndexPath(row: messsages.count-1, section: 0), at: .bottom, animated: true)
+                    self.chatRoomTableView.reloadData()
+                    self.chatRoomTableView.scrollToRow(at: IndexPath(row: messsages.count-1, section: 0), at: .bottom, animated: false)
                 case .modified,.removed:
                     print("nothing to do")
                 }
@@ -104,7 +137,7 @@ extension ChatRoomViewController: ChatInputAccessoryViewDelegate {
                 return
             }
             
-          
+            
             let latestMessageDate =  [
                 "latestMessageId": messageId
             ]

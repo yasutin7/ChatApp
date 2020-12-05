@@ -10,6 +10,7 @@ import Firebase
 import FirebaseAuth
 import FirebaseFirestore
 import FirebaseStorage
+import PKHUD
 
 class SignUpViewController: UIViewController {
     
@@ -56,7 +57,7 @@ class SignUpViewController: UIViewController {
     }
     
     @IBAction func tappedProfileImageButton(_ sender: Any) {
-       let imagePickerController = UIImagePickerController()
+        let imagePickerController = UIImagePickerController()
         imagePickerController.delegate = self
         imagePickerController.allowsEditing = true
         
@@ -64,21 +65,25 @@ class SignUpViewController: UIViewController {
     }
     
     @IBAction func tappedRegisterButton(_ sender: Any) {
-        guard let image = profileImageButton.imageView?.image else {return}
-        guard let uploadImage = image.jpegData(compressionQuality: 0.3) else {return}
+        let image = profileImageButton.imageView?.image ?? UIImage(named: "asia")
+        guard let uploadImage = image?.jpegData(compressionQuality: 0.3) else {return}
+        
+        HUD.show(.progress)
         let fileName = NSUUID().uuidString
         let storageRef = Storage.storage().reference().child("profile_image").child(fileName)
         storageRef.putData(uploadImage, metadata: nil) { (metadata, err) in
             if let err = err {
+                HUD.hide()
                 print("画像の保存に失敗しました。 \(err)")
             }else {
+                HUD.hide()
                 print("画像の保存に成功しました。")
                 storageRef.downloadURL{ [self](url,err) in
                     if let err = err {
+                        HUD.hide()
                         print("firestorageからのダウンロードに失敗しました。\(err)")
                     }else {
                         guard let urlString = url?.absoluteString else {return}
-                        print("urlString \(urlString)")
                         createUserToFirestore(profile_image: urlString)
                     }
                     
@@ -92,6 +97,7 @@ class SignUpViewController: UIViewController {
         guard let password = passwordTextField.text else {return}
         Auth.auth().createUser(withEmail: email, password: password) { [self](res, err ) in
             if let err = err {
+                HUD.hide()
                 print("認証情報の登録に失敗しました。　\(err)")
                 return
             }
@@ -107,13 +113,21 @@ class SignUpViewController: UIViewController {
             
             Firestore.firestore().collection("users").document(uid).setData(docData) {(err) in
                 if let err = err {
+                    HUD.hide()
                     print("データベースへの保存に失敗しました。\(err)")
                 }
+                HUD.hide()
+                print("データベースへの保存に成功しました。")
+                self.dismiss(animated: true, completion: nil)
                 
             }
             
         }
         
+    }
+    
+    override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
+        self.view.endEditing(true)
     }
     
 }
@@ -131,7 +145,7 @@ extension SignUpViewController: UITextFieldDelegate {
             registerButton.isEnabled = true
             registerButton.backgroundColor = .rgb(red: 0, green: 185, blue: 0)
         }
-       
+        
     }
 }
 
